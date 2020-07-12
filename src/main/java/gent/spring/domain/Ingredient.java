@@ -1,4 +1,4 @@
-package gent.spring.controllers.domain;
+package gent.spring.domain;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -18,6 +18,14 @@ public class Ingredient {
 
     @ManyToOne
     private Recipe recipe;
+
+
+    public Ingredient(String description, BigDecimal amount, UnitOfMeasure uom,Recipe recipe){
+        this.description=description;
+        this.amount=amount;
+        this.uom=uom;
+        this.recipe=recipe;
+    }
 
     public Long getId() {
         return id;

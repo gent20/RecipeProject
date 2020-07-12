@@ -1,4 +1,4 @@
-package gent.spring.controllers.domain;
+package gent.spring.domain;
 
 
 import javax.persistence.Entity;

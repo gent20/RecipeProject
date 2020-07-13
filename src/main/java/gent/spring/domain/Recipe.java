@@ -131,6 +131,13 @@ public class Recipe {
 
     public Notes getNotes() {
         return notes;
+        notes.setRecipe(this);
+    }
+
+    public Recipe addIngredient(Ingredient ingredient){
+        ingredient.setRecipe(this);
+        this.ingredients.add(ingredient);
+        return  this;
     }
 
     public void setNotes(Notes notes) {

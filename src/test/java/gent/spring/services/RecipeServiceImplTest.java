@@ -1,12 +1,12 @@
-package gent.spring.services;
-
 import gent.spring.commands.RecipeCommand;
 import gent.spring.converters.RecipeCommandToRecipe;
 import gent.spring.converters.RecipeToRecipeCommand;
 import gent.spring.domain.Recipe;
+import gent.spring.exceptions.NotFoundException;
 import gent.spring.repositories.RecipeRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import gent.spring.services.RecipeServiceImpl;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -14,11 +14,12 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-class RecipeServiceImplTest {
+
+public class RecipeServiceImplTest {
 
     RecipeServiceImpl recipeService;
 
@@ -31,13 +32,11 @@ class RecipeServiceImplTest {
     @Mock
     RecipeCommandToRecipe recipeCommandToRecipe;
 
-
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        recipeService = new RecipeServiceImpl(recipeRepository,recipeCommandToRecipe, recipeToRecipeCommand);
-
+        recipeService = new RecipeServiceImpl(recipeRepository, recipeCommandToRecipe, recipeToRecipeCommand);
     }
 
     @Test
@@ -55,6 +54,17 @@ class RecipeServiceImplTest {
         verify(recipeRepository, never()).findAll();
     }
 
+    @Test(expected = NotFoundException.class)
+    public void getRecipeByIdTestNotFound() throws Exception {
+
+        Optional<Recipe> recipeOptional = Optional.empty();
+
+        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+
+        Recipe recipeReturned = recipeService.findById(1L);
+
+        //should go boom
+    }
 
     @Test
     public void getRecipeCommandByIdTest() throws Exception {
@@ -75,7 +85,6 @@ class RecipeServiceImplTest {
         verify(recipeRepository, times(1)).findById(anyLong());
         verify(recipeRepository, never()).findAll();
     }
-
 
     @Test
     public void getRecipesTest() throws Exception {
